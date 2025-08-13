@@ -1,0 +1,26 @@
+plugins {
+	id 'java-gradle-plugin'
+}
+
+group = 'foo.zaaarf'
+version = '1.0.0' // TODO: automatic versioning
+
+gradlePlugin {
+	plugins {
+		zipdist {
+			id = 'foo.zaaarf.zipdist'
+			implementationClass = 'foo.zaaarf.zipdist.ZipDistPlugin'
+		}
+	}
+}
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	sourceCompatibility = '17'
+	targetCompatibility = '17'
+}

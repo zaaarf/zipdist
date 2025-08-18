@@ -1,5 +1,6 @@
 plugins {
 	id 'java-gradle-plugin'
+	id 'com.gradle.plugin-publish' version '1.2.1'
 }
 
 group = 'foo.zaaarf'
@@ -9,6 +10,9 @@ gradlePlugin {
 	plugins {
 		zipdist {
 			id = 'foo.zaaarf.zipdist'
+			displayName = 'zipdist'
+			description = 'Produces a ZIP containing all the things necessary for manual Maven publishing'
+			tags.addAll('maven', 'self-hosted')
 			implementationClass = 'foo.zaaarf.zipdist.ZipDistPlugin'
 		}
 	}
@@ -23,4 +27,9 @@ java {
 tasks.withType(JavaCompile).configureEach {
 	sourceCompatibility = '17'
 	targetCompatibility = '17'
+}
+
+gradlePlugin {
+	website = 'https://zaaarf.foo/projects/zipdist/'
+	vcsUrl = 'https://github.com/zaaarf/zipdist'
 }

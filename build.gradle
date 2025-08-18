@@ -1,17 +1,18 @@
 plugins {
 	id 'java-gradle-plugin'
 	id 'com.gradle.plugin-publish' version '1.2.1'
+	id 'com.palantir.git-version' version '4.0.0'
 }
 
 group = 'foo.zaaarf'
-version = '1.0.0' // TODO: automatic versioning
+version = versionDetails().lastTag
 
 gradlePlugin {
 	plugins {
 		zipdist {
 			id = 'foo.zaaarf.zipdist'
 			displayName = 'zipdist'
-			description = 'Produces a ZIP containing all the things necessary for manual Maven publishing'
+			description = 'Produces a ZIP containing all the things necessary for manual Maven publishing.'
 			tags.addAll('maven', 'self-hosted')
 			implementationClass = 'foo.zaaarf.zipdist.ZipDistPlugin'
 		}

@@ -9,6 +9,9 @@ import org.gradle.api.tasks.Delete;
 import org.gradle.api.tasks.bundling.Zip;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * The main class for the zipdist plugin.
+ */
 public class ZipDistPlugin implements Plugin<Project> {
 	@Override
 	public void apply(@NotNull Project project) {
@@ -16,24 +19,25 @@ public class ZipDistPlugin implements Plugin<Project> {
 
 		Directory distDir = project.getLayout().getBuildDirectory().dir("dist").get();
 		Directory distRoot = distDir.dir("maven");
+		project.afterEvaluate(p -> {
+			p.getExtensions().configure(PublishingExtension.class, publishing -> {
+				if(publishing.getPublications().isEmpty()) {
+					publishing.publications(publications -> publications.create(
+						"mavenJava",
+						MavenPublication.class,
+						publication -> publication.from(p.getComponents().findByName("java")))
+					);
+				}
 
-		project.getExtensions().configure(PublishingExtension.class, publishing -> {
-			publishing.publications(publications -> {
-				publications.create("mavenJava", MavenPublication.class, publication -> {
-					publication.from(project.getComponents().findByName("java"));
-				});
-			});
-
-			publishing.repositories(repos -> {
-				repos.maven(mavenRepo -> {
+				publishing.repositories(repos -> repos.maven(mavenRepo -> {
 					mavenRepo.setName("localDist");
 					mavenRepo.setUrl(distRoot);
-				});
+				}));
 			});
-		});
 
-		project.getTasks().register("cleanOldDist", Delete.class, d -> d.delete(distDir));
-		project.getTasks().getByName("publishAllPublicationsToLocalDistRepository").dependsOn("cleanOldDist");
+			project.getTasks().register("cleanOldDist", Delete.class, d -> d.delete(distDir));
+			project.getTasks().getByName("publishAllPublicationsToLocalDistRepository").dependsOn("cleanOldDist");
+		});
 
 		RegularFile zipFile = distDir.dir("output").file("dist.zip");
 		project.getTasks().register("zipDist", Zip.class, z -> {

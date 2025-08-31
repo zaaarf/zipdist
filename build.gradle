@@ -1,7 +1,7 @@
 plugins {
 	id 'java-gradle-plugin'
 	id 'com.gradle.plugin-publish' version '1.2.1'
-	id 'com.palantir.git-version' version '4.0.0'
+	id 'com.palantir.git-version' version '0.13.0'
 }
 
 group = 'foo.zaaarf'
@@ -21,13 +21,12 @@ gradlePlugin {
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
+		languageVersion = JavaLanguageVersion.of(8)
 	}
 }
 
 tasks.withType(JavaCompile).configureEach {
-	sourceCompatibility = '17'
-	targetCompatibility = '17'
+	sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 gradlePlugin {
